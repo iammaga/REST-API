@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: Fugr
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+paths:
+  /notebooks:
+    get:
+      tags:
+        - Notebook
+      summary: Get all notebooks
+      description: Returns list of notebooks
+      responses:
+        "200":
+          description: List of notebooks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Notebook"
+                        - $ref: "#/components/schemas/Timestampes"
+
+            multipart/form-data:
+              schema:
+                $ref: "#/components/schemas/Notebook"
+        "404":
+          description: List of Notebooks not found
+    post:
+      tags:
+        - Notebook
+      summary: Create a new Notebook
+      description: Creates a new Notebook with the given data
+      requestBody:
+        description: Notebook object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notebook"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Notebook"
+      responses:
+        "201":
+          description: Successfull response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Notebook"
+        "400":
+          description: Invalid input data
+  /notebooks/{id}:
+    get:
+      tags:
+        - Notebook
+      summary: Get notebook by ID
+      description: Returns a single notebook
+      parameters:
+        - name: id
+          in: path
+          description: ID of notebook to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: A single notebook object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Notebook"
+            multipart/form-data:
+              schema:
+                $ref: "#/components/schemas/Notebook"
+        "404":
+          description: Notebook not found
+    post:
+      tags:
+        - Notebook
+      summary: Update a Notebook by ID
+      description: Update a Notebook with the given data
+      parameters:
+        - name: id
+          in: path
+          description: ID of notebook to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Notebook object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notebook"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Notebook"
+      responses:
+        "201":
+          description: Notebood updated successfully
+        "400":
+          description: Invalid input data
+    delete:
+      tags:
+        - Notebook
+      summary: Delete a notebook by ID
+      description: Deletes a notebook with the given ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the notebook to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        "201":
+          description: Notebook deleted successfully
+        "404":
+          description: Notebook not found
+components:
+  schemas:
+    Notebook:
+      type: object
+      properties:
+        full_name:
+          type: string
+          example: Muxammad
+        company:
+          type: string
+          example: Instagram
+        phone:
+          type: string
+          example: "+7999999999"
+        email:
+          type: string
+          example: "mail@mail.ru"
+        birthday:
+          type: string
+          example: "1999-05-05"
+        photo:
+          type: string
+          example: "https://via.placeholder.com/640x480.png/00ffdd?text=corrupti"
+    Timestampes:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-10-15T14:55:35.000000Z"
